@@ -19,7 +19,7 @@ Chạy `agent_simulation.py` với 2 bộ dữ liệu và ghi lại kết quả:
 
 ## 2. Phân tích & nhận xét
 
-### Tại sao Agent trả lời sai khi dùng Garbage Data?
+### Tai sao Agent trả lời sai khi dùng Garbage Data?
 
 Khi em chạy agent với bộ dữ liệu rác (`garbage_data.csv`), kết quả trả về hoàn toàn sai lệch so với thực tế. Có nhiều nguyên nhân dẫn đến vấn đề này:
 
