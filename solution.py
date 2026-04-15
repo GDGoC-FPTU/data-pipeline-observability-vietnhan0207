@@ -124,7 +124,7 @@ def load(df, output_path):
        - df.to_csv(output_path, index=False)
     """
     df.to_csv(output_path, index=False)
-    print(f"Data saved to {output_path}")
+    print(f"Successfully loaded {len(df)} records to {output_path}")
 
 
 # ============================================================

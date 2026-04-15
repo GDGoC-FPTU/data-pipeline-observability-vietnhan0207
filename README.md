@@ -2,46 +2,86 @@
 # Day 10 Lab: Data Pipeline & Data Observability
 
 **Student Email:** 26ai.nhanpnv@vinuni.edu.com
-**Name:** Phan Nguyễn Việt Nhân 
+**Name:** Phan Nguyễn Việt Nhân
 
 ---
 
-## Mo ta
+## Mô tả
 
-(Mo ta ngan gon bai lab va nhung gi ban da lam)
+Trong bài lab này, em đã xây dựng một ETL Pipeline tự động hoàn chỉnh bao gồm 4 bước chính: **Extract** dữ liệu từ file JSON, **Validate** để lọc bỏ các bản ghi không hợp lệ (giá âm hoặc bằng 0, category trống), **Transform** để chuẩn hóa dữ liệu (tính giá sau giảm 10%, đổi category về Title Case, thêm timestamp), và **Load** kết quả ra file CSV. Bên cạnh đó, em cũng thực hiện thí nghiệm so sánh hiệu quả của AI Agent khi hoạt động với dữ liệu sạch và dữ liệu rác, qua đó thấy rõ tầm quan trọng của chất lượng dữ liệu đối với kết quả đầu ra.
 
 ---
 
-## Cach chay (How to Run)
+## Cách chạy (How to Run)
 
 ### Prerequisites
+
+Tạo và kích hoạt virtual environment, sau đó cài đặt các thư viện cần thiết:
+
 ```bash
-pip install pandas
+python -m venv venv
+.\venv\Scripts\activate
+pip install pandas pytest
 ```
 
-### Chay ETL Pipeline
+### Chạy ETL Pipeline
+
 ```bash
 python solution.py
 ```
 
-### Chay Agent Simulation (Stress Test)
+Sau khi chạy thành công, file `processed_data.csv` sẽ được tạo ra trong cùng thư mục.
+
+### Chạy Agent Simulation (Stress Test)
+
+Bước 1 — Tạo dữ liệu sạch bằng cách chạy pipeline trước:
+
 ```bash
-# Mo ta cach ban chay thi nghiem Clean vs Garbage data
+python solution.py
+```
+
+Bước 2 — Tạo dữ liệu rác:
+
+```bash
+python generate_garbage.py
+```
+
+Bước 3 — Chạy thí nghiệm so sánh:
+
+```bash
+python agent_simulation.py
+```
+
+### Chạy Tests (Autograder)
+
+```bash
+pytest tests/test_autograder.py -v
 ```
 
 ---
 
-## Cau truc thu muc
+## Cấu trúc thư mục
 
 ```
 ├── solution.py              # ETL Pipeline script
-├── processed_data.csv       # Output cua pipeline
-├── experiment_report.md     # Bao cao thi nghiem
-└── README.md                # File nay
+├── raw_data.json            # Dữ liệu đầu vào
+├── processed_data.csv       # Output của pipeline (được tạo sau khi chạy)
+├── garbage_data.csv         # Dữ liệu rác (được tạo bởi generate_garbage.py)
+├── agent_simulation.py      # Script mô phỏng AI Agent
+├── generate_garbage.py      # Script tạo dữ liệu rác
+├── experiment_report.md     # Báo cáo thí nghiệm so sánh
+└── README.md                # File này
 ```
 
 ---
 
-## Ket qua
+## Kết quả
 
-(Tom tat ket qua: bao nhieu records da xu ly, bao nhieu bi loai, v.v.)
+Pipeline xử lý tổng cộng **5 records** từ file `raw_data.json`:
+- **3 records hợp lệ** được giữ lại và lưu vào `processed_data.csv`
+- **2 records bị loại**: 1 record có giá âm (-10), 1 record có category trống
+- Giá sau giảm 10% đã được tính toán chính xác vào cột `discounted_price`
+- Category đã được chuẩn hóa về dạng Title Case (vd: "electronics" → "Electronics")
+- Mỗi record được thêm cột `processed_at` với timestamp xử lý
+
+Qua thí nghiệm Agent Simulation, em nhận thấy rằng dữ liệu sạch giúp agent trả lời chính xác (chọn Laptop $1200), trong khi dữ liệu rác khiến agent chọn Nuclear Reactor $999.999 — một kết quả do outlier trong dữ liệu.
